@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 
-// Stripe brand palette
 const S = {
   purple:     "#635BFF",
   purpleDark: "#4F46E5",
-  purpleGlow: "#635BFF22",
   navy:       "#0A2540",
-  navyCard:   "#0D2F50",
-  navyRow:    "#0F3460",
-  slate:      "#1A3A5C",
-  border:     "#1E3A5F",
-  text:       "#FFFFFF",
-  textMuted:  "#8898AA",
-  textDim:    "#425466",
-  green:      "#00D924",
-  greenSoft:  "#00D92422",
-  amber:      "#F5A623",
-  amberSoft:  "#F5A62322",
-  red:        "#FF4D4D",
-  redSoft:    "#FF4D4D22",
-  violet:     "#A78BFA",
-  violetSoft: "#A78BFA22",
+  navySide:   "#0A2540",
+  white:      "#FFFFFF",
+  bgPage:     "#F6F9FC",
+  bgCard:     "#FFFFFF",
+  border:     "#E0E6EB",
+  borderDark: "#C4CEDD",
+  text:       "#1A1A2E",
+  textMuted:  "#425466",
+  textDim:    "#8898AA",
+  green:      "#0BBF6A",
+  greenSoft:  "#0BBF6A18",
+  amber:      "#D97706",
+  amberSoft:  "#D9770618",
+  red:        "#DF1B41",
+  redSoft:    "#DF1B4118",
+  violet:     "#7C3AED",
+  violetSoft: "#7C3AED18",
 };
 
 const COLORS = {
@@ -37,22 +37,17 @@ function fmt(cents) {
 function SummaryCard({ label, value, color, subtitle }) {
   return (
     <div style={{
-      background: S.navyCard,
-      border: `1px solid ${color}44`,
-      borderRadius: 12,
-      padding: "22px 24px",
+      background: S.bgCard,
+      border: `1px solid ${S.border}`,
+      borderRadius: 8,
+      padding: "20px 24px",
       flex: 1,
       minWidth: 150,
-      position: "relative",
-      overflow: "hidden",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
     }}>
-      <div style={{
-        position: "absolute", top: 0, left: 0, right: 0, height: 3,
-        background: color, borderRadius: "12px 12px 0 0",
-      }} />
-      <div style={{ fontSize: 12, color: S.textMuted, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
-      <div style={{ fontSize: 38, fontWeight: 700, color, lineHeight: 1 }}>{value}</div>
-      {subtitle && <div style={{ fontSize: 12, color: S.textDim, marginTop: 6 }}>{subtitle}</div>}
+      <div style={{ fontSize: 12, color: S.textDim, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 500 }}>{label}</div>
+      <div style={{ fontSize: 34, fontWeight: 700, color, lineHeight: 1.1 }}>{value}</div>
+      {subtitle && <div style={{ fontSize: 12, color: S.textMuted, marginTop: 6 }}>{subtitle}</div>}
     </div>
   );
 }
@@ -62,39 +57,41 @@ function Table({ title, data, color, columns }) {
   if (!data || data.length === 0) return null;
   return (
     <div style={{
-      marginBottom: 24,
-      background: S.navyCard,
-      borderRadius: 12,
+      marginBottom: 20,
+      background: S.bgCard,
+      borderRadius: 8,
       border: `1px solid ${S.border}`,
+      boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
       overflow: "hidden",
     }}>
       <div
         onClick={() => setOpen(o => !o)}
         style={{
           display: "flex", alignItems: "center", gap: 10,
-          cursor: "pointer", padding: "16px 20px",
+          cursor: "pointer", padding: "14px 20px",
           borderBottom: open ? `1px solid ${S.border}` : "none",
-          background: S.navy,
+          background: S.bgCard,
         }}
       >
-        <div style={{ width: 8, height: 8, borderRadius: "50%", background: color, boxShadow: `0 0 6px ${color}` }} />
+        <div style={{ width: 8, height: 8, borderRadius: "50%", background: color }} />
         <span style={{ fontWeight: 600, fontSize: 14, color: S.text }}>{title}</span>
         <span style={{
-          background: color + "22", color, fontSize: 11,
-          padding: "2px 8px", borderRadius: 20, fontWeight: 700,
+          background: color + "18", color,
+          fontSize: 11, padding: "2px 8px", borderRadius: 20, fontWeight: 700,
         }}>{data.length}</span>
-        <span style={{ marginLeft: "auto", color: S.textMuted, fontSize: 11 }}>{open ? "▲" : "▼"}</span>
+        <span style={{ marginLeft: "auto", color: S.textDim, fontSize: 11 }}>{open ? "▲" : "▼"}</span>
       </div>
       {open && (
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
             <thead>
-              <tr style={{ background: "#0A2540CC" }}>
+              <tr style={{ background: S.bgPage }}>
                 {columns.map(c => (
                   <th key={c.key} style={{
                     textAlign: "left", padding: "10px 16px",
-                    color: S.textMuted, borderBottom: `1px solid ${S.border}`,
-                    fontWeight: 500, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.04em",
+                    color: S.textDim, borderBottom: `1px solid ${S.border}`,
+                    fontWeight: 500, fontSize: 11,
+                    textTransform: "uppercase", letterSpacing: "0.06em",
                   }}>{c.label}</th>
                 ))}
               </tr>
@@ -102,14 +99,13 @@ function Table({ title, data, color, columns }) {
             <tbody>
               {data.map((row, i) => (
                 <tr key={i} style={{
-                  borderBottom: `1px solid ${S.border}`,
-                  background: i % 2 === 0 ? "transparent" : "#0A254008",
+                  borderBottom: i < data.length - 1 ? `1px solid ${S.border}` : "none",
                 }}>
                   {columns.map(c => (
                     <td key={c.key} style={{
-                      padding: "11px 16px",
+                      padding: "12px 16px",
                       color: c.highlight ? color : S.text,
-                      fontFamily: c.mono ? "'SF Mono', 'Fira Code', monospace" : "inherit",
+                      fontFamily: c.mono ? "'SF Mono','Fira Code',monospace" : "inherit",
                       fontSize: c.mono ? 11 : 13,
                       fontWeight: c.highlight ? 600 : 400,
                     }}>
@@ -146,149 +142,152 @@ export default function App() {
   const matchRate = data?.summary?.match_rate ?? 0;
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: S.navy,
-      color: S.text,
-      fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-    }}>
-      {/* Top nav bar — Stripe style */}
+    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "'Inter', system-ui, sans-serif" }}>
+
+      {/* Sidebar — Stripe navy */}
       <div style={{
-        background: "#0A2540F0",
-        backdropFilter: "blur(10px)",
-        borderBottom: `1px solid ${S.border}`,
-        padding: "0 40px",
-        display: "flex",
-        alignItems: "center",
-        height: 56,
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
+        width: 220, background: S.navySide, flexShrink: 0,
+        display: "flex", flexDirection: "column", padding: "20px 0",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {/* Stripe-style logo mark */}
-          <div style={{
-            width: 28, height: 28, background: S.purple,
-            borderRadius: 6, display: "flex", alignItems: "center",
-            justifyContent: "center", fontSize: 14, fontWeight: 700,
-          }}>S</div>
-          <span style={{ fontWeight: 600, fontSize: 15, color: S.text }}>Entropy Solutions</span>
-          <span style={{ color: S.border, fontSize: 18, margin: "0 4px" }}>|</span>
-          <span style={{ fontSize: 14, color: S.textMuted }}>Reconciliation</span>
+        {/* Logo */}
+        <div style={{ padding: "0 20px 24px", borderBottom: "1px solid #1E3A5F" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{
+              width: 28, height: 28, background: S.purple,
+              borderRadius: 6, display: "flex", alignItems: "center",
+              justifyContent: "center", fontSize: 14, fontWeight: 700, color: "#fff",
+            }}>E</div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Entropy Solutions</div>
+              <div style={{ fontSize: 11, color: "#8898AA" }}>Sandbox</div>
+            </div>
+          </div>
         </div>
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
-          {lastRefresh && (
-            <span style={{ fontSize: 12, color: S.textDim }}>Updated {lastRefresh}</span>
-          )}
-          <button
-            onClick={fetchData}
-            style={{
-              background: S.purple, border: "none", color: "#fff",
-              borderRadius: 6, padding: "7px 14px", cursor: "pointer",
-              fontSize: 13, fontWeight: 500,
-            }}
-          >
-            ↻ Refresh
-          </button>
+
+        {/* Nav items */}
+        <nav style={{ padding: "16px 12px", flex: 1 }}>
+          {[
+            { icon: "⊞", label: "Home" },
+            { icon: "↕", label: "Balances" },
+            { icon: "≡", label: "Transactions" },
+            { icon: "♦", label: "Payments", active: true },
+            { icon: "◎", label: "Reconciliation", highlight: true },
+            { icon: "📊", label: "Reporting" },
+          ].map(item => (
+            <div key={item.label} style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "8px 10px", borderRadius: 6, marginBottom: 2,
+              background: item.highlight ? S.purple + "33" : item.active ? "#ffffff18" : "transparent",
+              cursor: "pointer",
+            }}>
+              <span style={{ fontSize: 13, color: item.highlight ? S.purple : "#8898AA" }}>{item.icon}</span>
+              <span style={{
+                fontSize: 13, fontWeight: item.highlight || item.active ? 600 : 400,
+                color: item.highlight ? "#fff" : item.active ? "#fff" : "#8898AA",
+              }}>{item.label}</span>
+            </div>
+          ))}
+        </nav>
+
+        <div style={{ padding: "16px 12px", borderTop: "1px solid #1E3A5F" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px" }}>
+            <div style={{ width: 28, height: 28, borderRadius: "50%", background: S.purple, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff" }}>SC</div>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 500, color: "#fff" }}>Surya C.</div>
+              <div style={{ fontSize: 11, color: "#8898AA" }}>Analyst</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Page content */}
-      <div style={{ padding: "36px 40px", maxWidth: 1200, margin: "0 auto" }}>
+      {/* Main content — white */}
+      <div style={{ flex: 1, background: S.bgPage, display: "flex", flexDirection: "column" }}>
 
-        {/* Page title */}
-        <div style={{ marginBottom: 28 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0, color: S.text }}>
-            Payment Reconciliation
-          </h1>
-          <p style={{ fontSize: 14, color: S.textMuted, margin: "6px 0 0" }}>
-            Stripe API vs Bank Settlement File · Sandbox
-          </p>
+        {/* Top bar */}
+        <div style={{
+          background: S.bgCard, borderBottom: `1px solid ${S.border}`,
+          padding: "0 32px", height: 56,
+          display: "flex", alignItems: "center", gap: 16,
+        }}>
+          <span style={{ fontSize: 14, color: S.textMuted }}>Payments</span>
+          <span style={{ color: S.border }}>/</span>
+          <span style={{ fontSize: 14, fontWeight: 500, color: S.text }}>Reconciliation</span>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+            {lastRefresh && <span style={{ fontSize: 12, color: S.textDim }}>Updated {lastRefresh}</span>}
+            <button onClick={fetchData} style={{
+              background: S.purple, border: "none", color: "#fff",
+              borderRadius: 6, padding: "7px 16px", cursor: "pointer",
+              fontSize: 13, fontWeight: 500,
+            }}>↻ Refresh</button>
+          </div>
         </div>
 
-        {loading && (
-          <div style={{ color: S.textMuted, textAlign: "center", marginTop: 80, fontSize: 14 }}>
-            <div style={{ fontSize: 24, marginBottom: 12 }}>⟳</div>
-            Fetching from Stripe API...
-          </div>
-        )}
-
-        {error && (
-          <div style={{
-            background: S.redSoft, border: `1px solid ${S.red}`,
-            borderRadius: 10, padding: 20, color: S.red,
-          }}>{error}</div>
-        )}
-
-        {data && <>
-          {/* Summary Cards */}
-          <div style={{ display: "flex", gap: 14, marginBottom: 32, flexWrap: "wrap" }}>
-            <SummaryCard
-              label="Match Rate"
-              value={`${matchRate}%`}
-              color={matchRate >= 90 ? S.green : matchRate >= 70 ? S.amber : S.red}
-              subtitle={`${data.summary.matched} of ${data.summary.total_stripe_charges} charges`}
-            />
-            <SummaryCard label="Matched" value={data.summary.matched} color={COLORS.matched} subtitle="Stripe = Bank ✓" />
-            <SummaryCard label="Missing in Bank" value={data.summary.missing_in_bank} color={COLORS.missing_in_bank} subtitle="Revenue at risk" />
-            <SummaryCard label="Amount Mismatch" value={data.summary.amount_mismatch} color={COLORS.amount_mismatch} subtitle="Fee or FX drift" />
-            <SummaryCard label="Ghost Records" value={data.summary.missing_in_stripe} color={COLORS.missing_in_stripe} subtitle="In bank, not Stripe" />
+        {/* Content */}
+        <div style={{ padding: "32px", maxWidth: 1100, width: "100%" }}>
+          <div style={{ marginBottom: 24 }}>
+            <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0, color: S.text }}>Payment Reconciliation</h1>
+            <p style={{ fontSize: 13, color: S.textMuted, margin: "4px 0 0" }}>Stripe API vs Bank Settlement File</p>
           </div>
 
-          {/* Discrepancy Tables */}
-          <Table
-            title="Missing in Bank Settlement"
-            data={data.missing_in_bank}
-            color={COLORS.missing_in_bank}
-            columns={[
-              { key: "charge_id", label: "Charge ID", mono: true },
-              { key: "description", label: "Description" },
-              { key: "amount", label: "Stripe Amount", render: r => fmt(r.amount), highlight: true },
-              { key: "created", label: "Created" },
-              { key: "issue", label: "Issue", highlight: true },
-            ]}
-          />
+          {loading && (
+            <div style={{ color: S.textMuted, textAlign: "center", marginTop: 80 }}>Fetching from Stripe API...</div>
+          )}
+          {error && (
+            <div style={{ background: S.redSoft, border: `1px solid ${S.red}`, borderRadius: 8, padding: 16, color: S.red, fontSize: 13 }}>{error}</div>
+          )}
 
-          <Table
-            title="Amount Mismatch"
-            data={data.amount_mismatch}
-            color={COLORS.amount_mismatch}
-            columns={[
-              { key: "charge_id", label: "Charge ID", mono: true },
-              { key: "stripe_amount", label: "Stripe Amount", render: r => fmt(r.stripe_amount) },
-              { key: "bank_amount", label: "Bank Amount", render: r => fmt(r.bank_amount), highlight: true },
-              { key: "diff", label: "Difference", render: r => fmt(Math.abs(r.diff)), highlight: true },
-              { key: "created", label: "Created" },
-            ]}
-          />
+          {data && <>
+            <div style={{ display: "flex", gap: 14, marginBottom: 28, flexWrap: "wrap" }}>
+              <SummaryCard
+                label="Match Rate"
+                value={`${matchRate}%`}
+                color={matchRate >= 90 ? S.green : matchRate >= 70 ? S.amber : S.red}
+                subtitle={`${data.summary.matched} of ${data.summary.total_stripe_charges} charges`}
+              />
+              <SummaryCard label="Matched" value={data.summary.matched} color={COLORS.matched} subtitle="Stripe = Bank ✓" />
+              <SummaryCard label="Missing in Bank" value={data.summary.missing_in_bank} color={COLORS.missing_in_bank} subtitle="Revenue at risk" />
+              <SummaryCard label="Amount Mismatch" value={data.summary.amount_mismatch} color={COLORS.amount_mismatch} subtitle="Fee or FX drift" />
+              <SummaryCard label="Ghost Records" value={data.summary.missing_in_stripe} color={COLORS.missing_in_stripe} subtitle="In bank, not Stripe" />
+            </div>
 
-          <Table
-            title="Ghost Records — In Bank, Not in Stripe"
-            data={data.missing_in_stripe}
-            color={COLORS.missing_in_stripe}
-            columns={[
-              { key: "charge_id", label: "Charge ID", mono: true },
-              { key: "amount", label: "Amount", render: r => fmt(r.amount), highlight: true },
-              { key: "currency", label: "Currency" },
-              { key: "status", label: "Bank Status" },
-              { key: "issue", label: "Issue", highlight: true },
-            ]}
-          />
+            <Table title="Missing in Bank Settlement" data={data.missing_in_bank} color={COLORS.missing_in_bank}
+              columns={[
+                { key: "charge_id", label: "Charge ID", mono: true },
+                { key: "description", label: "Description" },
+                { key: "amount", label: "Stripe Amount", render: r => fmt(r.amount), highlight: true },
+                { key: "created", label: "Created" },
+                { key: "issue", label: "Issue", highlight: true },
+              ]} />
 
-          <Table
-            title="Matched Records"
-            data={data.matched}
-            color={COLORS.matched}
-            columns={[
-              { key: "charge_id", label: "Charge ID", mono: true },
-              { key: "description", label: "Description" },
-              { key: "amount", label: "Amount", render: r => fmt(r.amount), highlight: true },
-              { key: "currency", label: "Currency" },
-              { key: "status", label: "Status" },
-              { key: "created", label: "Created" },
-            ]}
-          />
-        </>}
+            <Table title="Amount Mismatch" data={data.amount_mismatch} color={COLORS.amount_mismatch}
+              columns={[
+                { key: "charge_id", label: "Charge ID", mono: true },
+                { key: "stripe_amount", label: "Stripe Amount", render: r => fmt(r.stripe_amount) },
+                { key: "bank_amount", label: "Bank Amount", render: r => fmt(r.bank_amount), highlight: true },
+                { key: "diff", label: "Difference", render: r => fmt(Math.abs(r.diff)), highlight: true },
+                { key: "created", label: "Created" },
+              ]} />
+
+            <Table title="Ghost Records — In Bank, Not in Stripe" data={data.missing_in_stripe} color={COLORS.missing_in_stripe}
+              columns={[
+                { key: "charge_id", label: "Charge ID", mono: true },
+                { key: "amount", label: "Amount", render: r => fmt(r.amount), highlight: true },
+                { key: "currency", label: "Currency" },
+                { key: "status", label: "Bank Status" },
+                { key: "issue", label: "Issue", highlight: true },
+              ]} />
+
+            <Table title="Matched Records" data={data.matched} color={COLORS.matched}
+              columns={[
+                { key: "charge_id", label: "Charge ID", mono: true },
+                { key: "description", label: "Description" },
+                { key: "amount", label: "Amount", render: r => fmt(r.amount), highlight: true },
+                { key: "currency", label: "Currency" },
+                { key: "status", label: "Status" },
+                { key: "created", label: "Created" },
+              ]} />
+          </>}
+        </div>
       </div>
     </div>
   );
